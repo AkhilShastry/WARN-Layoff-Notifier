@@ -15,14 +15,14 @@ of the 50 states posts them on its own website, in its own format.
 ## What this project does
 
 1. **Scrapes** all 50 states' official labor department sites and pulls every
-   WARN notice they publish — company name, location, number of workers,
+   WARN notice they publish company name, location, number of workers,
    dates, industry.
 2. **Cleans and stores** it all in one database, in one consistent format,
    even though every state names its columns differently and uses different
    file types (web pages, Excel files, PDFs, etc.).
 3. **A website** where anyone can search that database by state, company
    name, or industry, and see recent layoffs and running totals.
-4. **Email alerts** — set up a profile (e.g. "notify me about layoffs in
+4. **Email alerts** set up a profile (e.g. "notify me about layoffs in
    Maryland over 100 people") and get emailed when a new matching notice
    shows up.
 
