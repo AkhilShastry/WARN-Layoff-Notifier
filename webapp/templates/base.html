@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}WARN Tracker{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="site">
+    <div class="wrap site-nav">
+      <a class="brand" href="{{ url_for('index') }}">
+        <span class="mark" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 1.5 18.5 16h-17L10 1.5Z" fill="url(#markGrad)"/>
+            <path d="M10 7.2v4.6M10 14.3v.1" stroke="#0b0d1a" stroke-width="1.6" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="markGrad" x1="1.5" y1="1.5" x2="18.5" y2="16" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#ff7a52"/>
+                <stop offset="1" stop-color="#6a5cf5"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </span>
+        WARN Tracker
+      </a>
+      <nav>
+        <a href="{{ url_for('index') }}" class="{{ 'active' if request.endpoint == 'index' }}">Search</a>
+        <a href="{{ url_for('stats') }}" class="{{ 'active' if request.endpoint == 'stats' }}">Statistics</a>
+        <a href="{{ url_for('subscribe') }}" class="{{ 'active' if request.endpoint == 'subscribe' }}">Get Alerts</a>
+        <a href="{{ url_for('about') }}" class="{{ 'active' if request.endpoint == 'about' }}">About</a>
+      </nav>
+    </div>
+  </header>
+
+  {% block stat_strip %}{% endblock %}
+
+  <main class="wrap">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site">
+    Data collected from official state labor department sources.
+    Not affiliated with any state government.
+  </footer>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

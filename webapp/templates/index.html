@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% block title %}Search WARN Notices{% endblock %}
+
+{% block stat_strip %}
+<div class="stat-strip">
+  <div class="stat">
+    <div class="num">{{ totals.notices | commas }}</div>
+    <div class="label">Notices</div>
+  </div>
+  <div class="stat">
+    <div class="num">{{ totals.workers_affected | commas }}</div>
+    <div class="label">Workers Affected</div>
+  </div>
+  <div class="stat">
+    <div class="num">{{ totals.states | commas }}</div>
+    <div class="label">States</div>
+  </div>
+  <div class="stat">
+    <div class="num">{{ totals.earliest_notice.year if totals.earliest_notice else '—' }}&ndash;{{ totals.latest_notice.year if totals.latest_notice else '—' }}</div>
+    <div class="label">Coverage</div>
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<h1>Search layoff notices</h1>
+<p class="lede">
+  Search WARN (Worker Adjustment and Retraining Notification) filings from
+  official state labor department sources &mdash; company closures, mass
+  layoffs, and plant shutdowns. Results update as you type.
+</p>
+
+<div class="card search-card">
+  <!-- Plain GET form: works with JavaScript off, since this route (`/`)
+       renders exactly the same results the JS-driven version below fetches
+       from /api/search. app.js intercepts submit/input/change on this form
+       and takes over; without it, this just submits normally. -->
+  <form class="search-form" id="search-form" method="get" action="{{ url_for('index') }}">
+    <div class="field">
+      <label for="q">Company or industry</label>
+      <input type="text" id="q" name="q" value="{{ q }}" placeholder="e.g. Amazon, retail, airlines" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="state">State</label>
+      <select id="state" name="state">
+        <option value="">All states</option>
+        {% for code in states %}
+          <option value="{{ code }}" {{ 'selected' if code == state }}>{{ state_names.get(code, code) }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="field">
+      <label for="city">City</label>
+      <input type="text" id="city" name="city" value="{{ city }}" placeholder="e.g. Baltimore" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="min_employees">Min. workers</label>
+      <input type="number" id="min_employees" name="min_employees" min="0" value="{{ min_employees }}" placeholder="any">
+    </div>
+    <div class="field">
+      <label for="since">Since</label>
+      <input type="date" id="since" name="since" value="{{ since }}">
+    </div>
+    <button type="submit">Search</button>
+  </form>
+  <label class="field field-check" style="margin-top:10px;">
+    <input type="checkbox" id="active_only" name="active_only" value="1"
+           form="search-form" {{ 'checked' if active_only }}>
+    Only notices still listed as active by the state
+  </label>
+  <p class="hint">
+    WARN notices report layoffs at the company level, not individual job
+    titles &mdash; to find one affecting your role, try searching your
+    employer's name or your industry.
+  </p>
+</div>
+
+<div class="results-head">
+  <h2 id="results-heading">{{ 'Search results' if has_filters else 'Latest notices' }}</h2>
+  <div class="results-count-group">
+    <span class="results-count" id="results-count">{{ total | commas }} match{{ 'es' if total != 1 else '' }}</span>
+    <a href="{{ url_for('export_csv', **request.args) }}" id="export-link" class="chip-btn">&#8595; Export CSV</a>
+    <span id="search-status" class="muted" hidden>Searching&hellip;</span>
+  </div>
+</div>
+
+<div class="card" id="results-card" style="padding:0; overflow-x:auto;" {{ 'hidden' if not rows }}>
+  <table class="notices">
+    <thead>
+      <tr>
+        <th>Employer</th>
+        <th>Location</th>
+        <th>Notice date</th>
+        <th>Effective date</th>
+        <th class="num-cell">Workers</th>
+        <th>Type</th>
+        <th>Source</th>
+      </tr>
+    </thead>
+    <tbody id="results-body">
+      {% for n in rows %}
+      <tr>
+        <td>
+          <div class="employer">{{ n.employer }}</div>
+          {% if n.industry %}<div class="muted">{{ n.industry }}</div>{% endif %}
+        </td>
+        <td>
+          {{ n.city or '' }}{% if n.city and n.state %}, {% endif %}{{ n.state }}
+          {% if n.county %}<div class="muted">{{ n.county }} County</div>{% endif %}
+        </td>
+        <td>{{ n.notice_date or '—' }}</td>
+        <td>{{ n.effective_date or '—' }}</td>
+        <td class="num-cell">{{ n.employees | commas }}</td>
+        <td>
+          {% if n.notice_type %}
+            <span class="badge {{ 'closure' if 'Closure' in n.notice_type else 'layoff' }}">{{ n.notice_type }}</span>
+          {% endif %}
+        </td>
+        <td class="source-link">
+          {% if n.source_url %}<a href="{{ n.source_url }}" target="_blank" rel="noopener">View filing &#8599;</a>{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="pagination" id="pagination">
+  {% if total_pages > 1 %}
+    {% set base_args = request.args.to_dict() %}
+    {% if page > 1 %}
+      {% set _ = base_args.update({'page': page - 1}) %}
+      <a href="{{ url_for('index', **base_args) }}" data-page="{{ page - 1 }}">&larr; Prev</a>
+    {% else %}
+      <span class="disabled">&larr; Prev</span>
+    {% endif %}
+    <span class="current">Page {{ page }} of {{ total_pages }}</span>
+    {% if page < total_pages %}
+      {% set _ = base_args.update({'page': page + 1}) %}
+      <a href="{{ url_for('index', **base_args) }}" data-page="{{ page + 1 }}">Next &rarr;</a>
+    {% else %}
+      <span class="disabled">Next &rarr;</span>
+    {% endif %}
+  {% endif %}
+</div>
+
+<div class="card empty-state" id="empty-state" {{ 'hidden' if rows }}>
+  <p style="margin:0 0 14px;">No notices match those filters. Try broadening your search.</p>
+  <a href="{{ url_for('index') }}" id="clear-filters" class="chip-btn">Clear filters</a>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='app.js') }}" defer></script>
+{% endblock %}

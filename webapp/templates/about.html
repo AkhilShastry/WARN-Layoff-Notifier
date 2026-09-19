@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}About &mdash; WARN Tracker{% endblock %}
+
+{% block content %}
+<h1>About this project</h1>
+
+<div class="card">
+  <h2>What's a WARN notice?</h2>
+  <p>
+    The <strong>Worker Adjustment and Retraining Notification (WARN) Act</strong>
+    requires employers planning a mass layoff or plant closing to give 60
+    days' advance notice. Every state collects these filings and (mostly)
+    publishes them &mdash; but every state publishes them differently: some
+    as web tables, some as Excel files, some as PDFs, a few not at all.
+  </p>
+</div>
+
+<div class="card">
+  <h2>What this site does</h2>
+  <p>
+    A scraper collects notices from official state labor department sources,
+    cleans up the wildly inconsistent formats into one common structure, and
+    stores them in a database. This site searches that database, and an alert
+    system emails subscribers when a new notice matches filters they've set.
+  </p>
+  <p style="margin-bottom:0;">
+    Right now that's {{ totals.notices | commas }} notices covering
+    {{ totals.states }} states and {{ totals.workers_affected | commas }}
+    workers, from {{ totals.earliest_notice }} to {{ totals.latest_notice }}.
+  </p>
+</div>
+
+<div class="card">
+  <h2>Limitations, honestly</h2>
+  <ul style="margin:0; padding-left: 20px;">
+    <li>WARN notices are filed at the <strong>company level</strong>, not by
+      individual job title &mdash; there's no way to search "was my specific
+      role affected," only "did my employer file a notice."</li>
+    <li>A few states (Arkansas, Wyoming) don't publish WARN data publicly at
+      all &mdash; it's confidential by state law.</li>
+    <li>A handful of other states aren't collected yet because their sites
+      block automated access or the data has moved.</li>
+    <li>Not every field is available for every state &mdash; some publish no
+      headcount, some no exact date.</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h2>Source</h2>
+  <p style="margin-bottom:0;">
+    Every notice links back to the state filing it came from. This is an
+    independent project and is not affiliated with any state government or
+    the U.S. Department of Labor.
+  </p>
+</div>
+{% endblock %}

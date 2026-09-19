@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "warn-aggregator"
+version = "0.1.0"
+description = "Scrapes WARN layoff notices from all 50 U.S. states into a SQL database"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "requests>=2.32",
+    "beautifulsoup4>=4.12",
+    "lxml>=5.0",
+    "html5lib>=1.1",
+    "pandas>=2.2",
+    "openpyxl>=3.1",
+    "xlrd>=2.0",
+    "SQLAlchemy>=2.0",
+    "python-dateutil>=2.9",
+    "tqdm>=4.66",
+    "Flask>=3.0",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+# Not strictly required, but several states need them:
+#   curl_cffi  -> state sites behind bot filters (MN, MO, TX)
+#   pdfplumber -> PDF-only states (NJ, NV, SC)
+full = ["curl_cffi>=0.6", "pdfplumber>=0.11"]
+dev = ["pytest>=8.0"]
+
+[project.scripts]
+warn = "warn.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["warn*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+filterwarnings = ["ignore::DeprecationWarning"]

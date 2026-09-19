@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Subscribed &mdash; WARN Tracker{% endblock %}
+
+{% block content %}
+<h1>You're subscribed</h1>
+
+<div class="success-banner">
+  We'll email <strong>{{ email }}</strong> when a new notice matches your filters.
+</div>
+
+{% if delivered %}
+<div class="card">
+  <h2>Check your inbox</h2>
+  <p style="margin-bottom:0;">
+    We just sent a welcome email to <strong>{{ email }}</strong> with a
+    summary of what you signed up for, when to expect alerts, and a link
+    back to the site.
+  </p>
+</div>
+{% else %}
+<div class="card">
+  <h2>About that welcome email</h2>
+  <p style="margin-bottom:0;">
+    We couldn't send that welcome email just now &mdash; either this instance
+    isn't connected to a mail server yet, or the one it's configured with
+    didn't respond. A preview of the message was written to
+    <code class="token">logs/alerts_sent.log</code> instead. Your subscription
+    itself is active either way, and future alerts will keep trying to send
+    normally.
+  </p>
+</div>
+{% endif %}
+
+<div class="card">
+  <h2>Save your unsubscribe link</h2>
+  <p>Every alert email includes this link. You can also bookmark it now:</p>
+  <p><a href="{{ url_for('unsubscribe', token=token) }}"><code class="token">{{ url_for('unsubscribe', token=token, _external=True) }}</code></a></p>
+</div>
+
+<p class="hint"><a href="{{ url_for('index') }}">&larr; Back to search</a></p>
+{% endblock %}

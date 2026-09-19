@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Get Alerts &mdash; WARN Tracker{% endblock %}
+
+{% block content %}
+<h1>Get email alerts</h1>
+<p class="lede">
+  Get notified when a new WARN notice matches your filters. Alerts go out on
+  the same schedule the scraper runs &mdash; typically within a scrape cycle
+  of a new notice appearing on a state's site.
+</p>
+
+{% if error %}
+<div class="error-banner">{{ error }}</div>
+{% endif %}
+
+<div class="card">
+  <form method="post" action="{{ url_for('subscribe') }}">
+    <div class="field" style="margin-bottom:16px;">
+      <label for="email">Email address</label>
+      <input type="email" id="email" name="email" required placeholder="you@example.com">
+    </div>
+
+    <div class="field" style="margin-bottom:16px;">
+      <label>States <span class="muted">(leave all unchecked for every state)</span></label>
+      <div class="checkbox-grid">
+        {% for code in states %}
+        <label><input type="checkbox" name="states" value="{{ code }}"> {{ code }}</label>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="field" style="margin-bottom:16px;">
+      <label for="keywords">Keywords <span class="muted">(comma-separated; matched against company &amp; industry)</span></label>
+      <input type="text" id="keywords" name="keywords" placeholder="e.g. retail, airlines, Amazon">
+    </div>
+
+    <div class="field" style="margin-bottom:20px; max-width:200px;">
+      <label for="min_employees">Minimum workers affected</label>
+      <input type="number" id="min_employees" name="min_employees" min="0" placeholder="any">
+    </div>
+
+    <button type="submit">Subscribe</button>
+  </form>
+</div>
+
+<p class="hint">
+  Every alert includes a one-click unsubscribe link. No account or password
+  is needed &mdash; the link in your confirmation email and every alert is
+  your only way to manage the subscription, so keep it.
+</p>
+{% endblock %}

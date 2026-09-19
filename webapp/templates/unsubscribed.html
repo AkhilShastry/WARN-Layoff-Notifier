@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Unsubscribed &mdash; WARN Tracker{% endblock %}
+
+{% block content %}
+<h1>Unsubscribed</h1>
+<div class="card">
+  <p><strong>{{ email }}</strong> will no longer receive WARN alerts.</p>
+  <p class="hint" style="margin-top:14px;">Changed your mind? <a href="{{ url_for('subscribe') }}">Subscribe again</a>.</p>
+</div>
+{% endblock %}

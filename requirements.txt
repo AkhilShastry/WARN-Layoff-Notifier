@@ -1,0 +1,23 @@
+# Core HTTP + parsing
+requests>=2.32
+curl_cffi>=0.6          # TLS-fingerprint fallback for state sites behind bot filters
+beautifulsoup4>=4.12
+lxml>=5.0
+html5lib>=1.1           # lenient fallback for malformed state HTML
+
+# Tabular sources
+pandas>=2.2
+openpyxl>=3.1           # .xlsx
+xlrd>=2.0               # legacy .xls
+pdfplumber>=0.11        # PDF-only states (NJ, SC)
+
+# Storage
+SQLAlchemy>=2.0
+
+# Website
+Flask>=3.0
+python-dotenv>=1.0   # reads .env for SMTP credentials etc. -- see .env.example
+
+# Utilities
+python-dateutil>=2.9
+tqdm>=4.66

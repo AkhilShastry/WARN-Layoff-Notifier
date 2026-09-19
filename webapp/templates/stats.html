@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Statistics &mdash; WARN Tracker{% endblock %}
+
+{% block content %}
+<h1>Statistics</h1>
+<p class="lede">
+  {{ totals.notices | commas }} notices collected across {{ totals.states }}
+  states, representing {{ totals.workers_affected | commas }} workers, from
+  {{ totals.earliest_notice }} to {{ totals.latest_notice }}.
+</p>
+
+<div class="card">
+  <h2>Notices by state</h2>
+  {% for code, count, workers in by_state %}
+  <div class="bar-row">
+    <div class="code">{{ code }}</div>
+    <div class="bar-track">
+      <div class="bar-fill" style="width: {{ (count / max_count * 100) | round(1) }}%;"></div>
+    </div>
+    <div class="num-cell">{{ count | commas }}</div>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="card">
+  <h2>What this doesn't tell you</h2>
+  <p class="lede" style="margin-bottom:0;">
+    Coverage depends on how each state publishes data &mdash; some states omit
+    headcounts, cities, or notice dates on some filings. Totals here reflect
+    what's in the database now, not every layoff that's occurred; some states
+    don't publish WARN data publicly at all. See the
+    <a href="{{ url_for('about') }}">About page</a> for details.
+  </p>
+</div>
+{% endblock %}

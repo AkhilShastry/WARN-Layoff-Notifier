@@ -1,0 +1,26 @@
+# Secrets -- never commit real credentials
+.env
+
+# Scraper artifacts
+cache/
+data/
+*.db
+*.sqlite
+*.sqlite3
+exports/
+logs/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+~$*.xlsx
