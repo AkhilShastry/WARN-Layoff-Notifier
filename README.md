@@ -46,7 +46,7 @@ pip install -r requirements.txt
 ```
 
 Requires Python 3.10+. `curl_cffi` and `pdfplumber` are optional but
-recommended — several states sit behind bot filters or publish PDF-only.
+recommended several states sit behind bot filters or publish PDF-only.
 
 ### 2. Collect the data
 
@@ -84,7 +84,7 @@ export WARN_SMTP_PASS=your-app-password
 ```
 
 In production you'd run `scrape` then `notify` on a schedule (cron, Task
-Scheduler, GitHub Actions) every 15–60 minutes — subscribers hear about a new
+Scheduler, GitHub Actions) every 15–60 minutes subscribers hear about a new
 layoff within one cycle of it appearing on the state's site.
 
 ## Current coverage
