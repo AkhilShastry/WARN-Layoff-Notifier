@@ -9,7 +9,7 @@ what they care about.
 By federal law, a company planning a mass layoff or plant closing has to give
 60 days' advance notice. That notice gets filed with the state. States are
 supposed to publish these filings so workers, job seekers, and local
-governments can see them coming — but there's no single place to look. Each
+governments can see them coming but there's no single place to look. Each
 of the 50 states posts them on its own website, in its own format.
 
 ## What this project does
